@@ -13,26 +13,13 @@ impl Logbook {
     }
 
     pub async fn list(&self) {
-        // let table = vec![
-        //     vec!["Tom".cell(), 10.cell().justify(Justify::Right)],
-        //     vec!["Jerry".cell(), 15.cell().justify(Justify::Right)],
-        //     vec!["Scooby Doo".cell(), 20.cell().justify(Justify::Right)],
-        // ]
-        // .table()
-        // .title(vec![
-        //     "Name".cell().bold(true),
-        //     "Age (in years)".cell().bold(true),
-        // ])
-        // .bold(true);
-
-        // print_stdout(table).unwrap();
-
         let logs = data::list_logs().await.unwrap();
 
         let table = logs
             .into_iter()
             .map(|log| {
                 vec![
+                    log.id.cell(),
                     log.date.cell(),
                     log.aircraft_type.cell(),
                     log.aircraft_registration.cell(),
@@ -45,6 +32,7 @@ impl Logbook {
             })
             .table()
             .title(vec![
+                "ID".cell().bold(true),
                 "Date".cell().bold(true),
                 "Aircraft Type".cell().bold(true),
                 "Aircraft Registration".cell().bold(true),
@@ -61,8 +49,20 @@ impl Logbook {
 }
 
 #[derive(Debug, sqlx::FromRow)]
-
 pub struct Log {
+    pub date: String,
+    pub aircraft_type: String,
+    pub aircraft_registration: String,
+    pub captain: String,
+    pub holders_capacity: String,
+    pub from_location: String,
+    pub to_location: String,
+    pub duration: String,
+}
+
+#[derive(Debug, sqlx::FromRow)]
+pub struct IdentifiableLog {
+    pub id: i64,
     pub date: String,
     pub aircraft_type: String,
     pub aircraft_registration: String,
