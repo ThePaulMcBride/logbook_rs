@@ -1,51 +1,53 @@
-use crate::logbook::Log;
+use crate::logbook::{IdentifiableLog, Log};
 
 pub async fn create_log(log: Log) -> Result<(), sqlx::Error> {
     let mut conn = super::get_connection().await?;
 
-    sqlx::query(
+    sqlx::query!(
         r#"
         INSERT INTO logs (
-          date,
-          aircraft_type,
-          aircraft_registration,
-          captain,
-          holders_capacity,
-          from_location,
-          to_location,
-          duration
+            date,
+            aircraft_type,
+            aircraft_registration,
+            captain,
+            holders_capacity,
+            from_location,
+            to_location,
+            duration
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         "#,
+        log.date,
+        log.aircraft_type,
+        log.aircraft_registration,
+        log.captain,
+        log.holders_capacity,
+        log.from_location,
+        log.to_location,
+        log.duration,
     )
-    .bind(log.date)
-    .bind(log.aircraft_type)
-    .bind(log.aircraft_registration)
-    .bind(log.captain)
-    .bind(log.holders_capacity)
-    .bind(log.from_location)
-    .bind(log.to_location)
-    .bind(log.duration)
     .execute(&mut conn)
     .await?;
 
     Ok(())
 }
 
-pub async fn list_logs() -> Result<Vec<Log>, sqlx::Error> {
+pub async fn list_logs() -> Result<Vec<IdentifiableLog>, sqlx::Error> {
     let mut conn = super::get_connection().await?;
 
-    let logs = sqlx::query_as::<_, Log>(
+    let logs = sqlx::query_as!(
+        IdentifiableLog,
         r#"
         SELECT
-          date,
-          aircraft_type,
-          aircraft_registration,
-          captain,
-          holders_capacity,
-          from_location,
-          to_location,
-          duration
+            id,
+            date,
+            aircraft_type,
+            aircraft_registration,
+            captain,
+            holders_capacity,
+            from_location,
+            to_location,
+            duration
         FROM logs
         ORDER BY date ASC
         "#,
