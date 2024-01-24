@@ -32,6 +32,21 @@ pub async fn create_log(log: Log) -> Result<(), sqlx::Error> {
     Ok(())
 }
 
+pub async fn delete_log(id: u32) -> Result<(), sqlx::Error> {
+    let mut conn = super::get_connection().await?;
+
+    sqlx::query!(
+        r#"
+        DELETE FROM logs WHERE id=$1
+        "#,
+        id
+    )
+    .execute(&mut conn)
+    .await?;
+
+    Ok(())
+}
+
 pub async fn list_logs() -> Result<Vec<IdentifiableLog>, sqlx::Error> {
     let mut conn = super::get_connection().await?;
 

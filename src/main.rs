@@ -13,6 +13,7 @@ async fn main() -> Result<(), sqlx::Error> {
     match args.command {
         Commands::List => commands::list_logs().await,
         Commands::Add => commands::create_log().await?,
+        Commands::Delete { id } => commands::delete_log(id).await?,
     }
 
     Ok(())

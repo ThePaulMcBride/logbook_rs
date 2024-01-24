@@ -46,6 +46,10 @@ impl Logbook {
 
         print_stdout(table).unwrap();
     }
+
+    pub async fn delete_log(&self, id: u32) -> Result<(), sqlx::Error> {
+        data::delete_log(id).await
+    }
 }
 
 #[derive(Debug, sqlx::FromRow)]

@@ -21,6 +21,11 @@ pub enum Commands {
     List,
     /// Add a new entry to your logbook
     Add,
+    /// Delete an entry
+    Delete {
+        /// ID of the entry to delete
+        id: u32,
+    },
 }
 
 pub async fn create_log() -> Result<(), sqlx::Error> {
@@ -102,4 +107,9 @@ pub async fn list_logs() {
     let logbook = Logbook::new();
 
     logbook.list().await;
+}
+
+pub async fn delete_log(id: u32) -> Result<(), sqlx::Error> {
+    let logbook = Logbook::new();
+    return logbook.delete_log(id).await;
 }

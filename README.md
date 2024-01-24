@@ -31,7 +31,7 @@ logbook help
 There are still a few things that need to be done:
 
 - [ ] Add a way to edit flights
-- [ ] Add a way to delete flights
+- [x] Add a way to delete flights
 - [ ] Add a way to export flights
 - [ ] Add a way to import flights
 - [ ] Add a way to view total hours etc
