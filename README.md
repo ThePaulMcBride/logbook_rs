@@ -30,7 +30,7 @@ logbook help
 
 There are still a few things that need to be done:
 
-- [ ] Add a way to edit flights
+- [x] Add a way to edit flights
 - [x] Add a way to delete flights
 - [ ] Add a way to export flights
 - [ ] Add a way to import flights

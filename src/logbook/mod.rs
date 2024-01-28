@@ -4,15 +4,19 @@ use cli_table::{print_stdout, Cell, Style, Table};
 pub struct Logbook {}
 
 impl Logbook {
-    pub fn new() -> Self {
-        Self {}
-    }
-
     pub async fn add_log(log: Log) -> Result<(), sqlx::Error> {
         data::create_log(log).await
     }
 
-    pub async fn list(&self) {
+    pub async fn get_log(id: u32) -> Result<IdentifiableLog, sqlx::Error> {
+        data::get_log(id).await
+    }
+
+    pub async fn update_log(id: u32, log: Log) -> Result<(), sqlx::Error> {
+        data::update_log(id, log).await
+    }
+
+    pub async fn list() {
         let logs = data::list_logs().await.unwrap();
 
         let table = logs
@@ -47,7 +51,7 @@ impl Logbook {
         print_stdout(table).unwrap();
     }
 
-    pub async fn delete_log(&self, id: u32) -> Result<(), sqlx::Error> {
+    pub async fn delete_log(id: u32) -> Result<(), sqlx::Error> {
         data::delete_log(id).await
     }
 }
