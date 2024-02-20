@@ -1,6 +1,8 @@
 mod logs;
 
-pub use logs::{create_log, delete_log, get_log, list_logs, update_log};
+pub use logs::{
+    create_log, delete_log, get_log, get_total_hours, list_logs, update_log, TotalHours,
+};
 use sqlx::{migrate, Connection, SqliteConnection};
 
 pub async fn get_connection() -> Result<sqlx::SqliteConnection, sqlx::Error> {

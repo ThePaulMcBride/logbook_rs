@@ -15,6 +15,7 @@ async fn main() -> Result<(), sqlx::Error> {
         Commands::Add => commands::create_log().await?,
         Commands::Delete { id } => commands::delete_log(id).await?,
         Commands::Update { id } => commands::update_log(id).await?,
+        Commands::Total => commands::total_hours().await?,
     }
 
     Ok(())

@@ -32,6 +32,8 @@ pub enum Commands {
         /// ID of the entry to update
         id: u32,
     },
+    /// List total hours flown
+    Total,
 }
 
 pub async fn create_log() -> Result<(), sqlx::Error> {
@@ -222,4 +224,19 @@ pub async fn update_log(id: u32) -> Result<(), sqlx::Error> {
     );
 
     return Logbook::update_log(id, log).await;
+}
+
+pub async fn total_hours() -> Result<(), sqlx::Error> {
+    let total_hours = Logbook::total_hours().await;
+
+    match total_hours {
+        Ok(total_hours) => {
+            println!("{total_hours}");
+            Result::Ok(())
+        }
+        Err(_) => {
+            eprintln!("There was a problem getting the total hours.");
+            Result::Err(sqlx::Error::RowNotFound)
+        }
+    }
 }

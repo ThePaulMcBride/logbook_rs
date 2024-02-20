@@ -1,4 +1,4 @@
-use crate::data;
+use crate::data::{self, TotalHours};
 use cli_table::{print_stdout, Cell, Style, Table};
 
 pub struct Logbook {}
@@ -53,6 +53,10 @@ impl Logbook {
 
     pub async fn delete_log(id: u32) -> Result<(), sqlx::Error> {
         data::delete_log(id).await
+    }
+
+    pub async fn total_hours() -> Result<TotalHours, sqlx::Error> {
+        data::get_total_hours().await
     }
 }
 

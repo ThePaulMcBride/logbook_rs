@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::logbook::{IdentifiableLog, Log};
 
 pub async fn create_log(log: Log) -> Result<(), sqlx::Error> {
@@ -130,4 +132,66 @@ pub async fn list_logs() -> Result<Vec<IdentifiableLog>, sqlx::Error> {
     .await?;
 
     Ok(logs)
+}
+
+pub struct TotalHours {
+    pub pic: String,
+    pub put: String,
+    pub total: String,
+}
+
+impl Display for TotalHours {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "PIC: {}\nPUT: {}\nTotal: {}",
+            self.pic, self.put, self.total
+        )
+    }
+}
+
+pub async fn get_total_hours() -> Result<TotalHours, sqlx::Error> {
+    let mut conn = super::get_connection().await?;
+
+    let total_hours = sqlx::query!(
+        r#"
+        SELECT duration, holders_capacity FROM logs
+        "#,
+    )
+    .fetch_all(&mut conn)
+    .await?;
+
+    let mut pic_mins = 0;
+    let mut put_mins = 0;
+    let mut total = 0;
+
+    for log in total_hours {
+        // parse minutes from hh:mm format
+        let duration = log.duration.split(":").collect::<Vec<&str>>();
+        let hours = duration[0].parse::<i32>().unwrap();
+        let minutes = duration[1].parse::<i32>().unwrap();
+        let total_minutes = (hours * 60) + minutes;
+
+        if log.holders_capacity == "PIC" {
+            pic_mins += total_minutes;
+        } else {
+            put_mins += total_minutes;
+        }
+        total += total_minutes;
+    }
+
+    let pic_hours = pic_mins / 60;
+    let pic_remainder = pic_mins % 60;
+    let put_hours = put_mins / 60;
+    let put_remainder = put_mins % 60;
+    let total_hours = total / 60;
+    let total_remainder = total % 60;
+
+    let pic = format!("{:02}:{:02}", pic_hours, pic_remainder);
+    let put = format!("{:02}:{:02}", put_hours, put_remainder);
+    let total = format!("{:02}:{:02}", total_hours, total_remainder);
+
+    let total_hours = TotalHours { pic, put, total };
+
+    Ok(total_hours)
 }
