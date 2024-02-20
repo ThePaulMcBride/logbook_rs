@@ -34,5 +34,5 @@ There are still a few things that need to be done:
 - [x] Add a way to delete flights
 - [ ] Add a way to export flights
 - [ ] Add a way to import flights
-- [ ] Add a way to view total hours etc
+- [x] Add a way to view total hours etc
 - [ ] Figure out how to distribute the binary
