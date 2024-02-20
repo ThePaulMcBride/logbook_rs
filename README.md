@@ -1,6 +1,6 @@
 # Logbook
 
-Logbook is a simple command line tool to keep the records of your fligts. It is written in Rust and uses SQLite as a database. All date is stored locally on your computer.
+Logbook is a simple command line tool to keep the records of your flights. It is written in Rust and uses SQLite as a database. All date is stored locally on your computer.
 
 ## Demo
 
